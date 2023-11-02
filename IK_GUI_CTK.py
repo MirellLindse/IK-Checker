@@ -1,3 +1,5 @@
+#Нужно установить библиотеки из импорта для нормальной работы кода вне .EXE
+
 import tkinter
 import customtkinter
 from CTkMessagebox import CTkMessagebox
