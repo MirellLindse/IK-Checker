@@ -1,15 +1,16 @@
-#Нужно установить библиотеки из импорта для нормальной работы кода вне .EXE
-
+# Нужно установить библиотеки из импорта для нормальной работы кода вне .EXE
 import tkinter
 import customtkinter
 from CTkMessagebox import CTkMessagebox
-from datetime import datetime
+from datetime import datetime, date
 import time
 import os
-import pdb #построчная отладка
+import pdb  # построчная отладка
+
 
 def remove_topmost():
-    app.attributes('-topmost', False)    
+    app.attributes('-topmost', False)
+
 
 def btnprs():
     global button_pressed
@@ -18,8 +19,9 @@ def btnprs():
         Start()
     elif button_pressed == True:
         Again()
-    
-def Start(): #Основная функция, создаёт GUI
+
+
+def Start():  # Основная функция, создаёт GUI
     global Length, Sex, Year, Months, Day, BornB, Valid, FullDOB
     Length = customtkinter.CTkLabel(app, text="Length: ")
     Length.pack(padx=40, pady=4)
@@ -39,7 +41,8 @@ def Start(): #Основная функция, создаёт GUI
     Valid.pack(padx=40, pady=4)
     Main()
 
-def Main(): #Проверка ИК на правильность(Наличие букв, команды Exit, длина(Равна ли 11))
+
+def Main():  # Проверка ИК на правильность(Наличие букв, команды Exit, длина(Равна ли 11))
     global ik
     ik = IKEntry.get()
     if any(c.isalpha() for c in ik):
@@ -57,17 +60,19 @@ def Main(): #Проверка ИК на правильность(Наличие 
                 Length.configure(text="Length:\n OK", text_color="Green")
                 YOB()
 
-def YOB(): #Определение года рождения
+
+def YOB():  # Определение года рождения
     global yearG
     if ik[1:3] >= YearNow[2:4]:
-        yearG = "19"+ik[1:3]
-        Year.configure(text="Year:\n"+yearG)
+        yearG = "19" + ik[1:3]
+        Year.configure(text="Year:\n" + yearG)
     elif ik[1:3] <= YearNow[2:4]:
-        yearG = "20"+ik[1:3]
-        Year.configure(text="Year:\n"+yearG)
+        yearG = "20" + ik[1:3]
+        Year.configure(text="Year:\n" + yearG)
     SexRec()
 
-def SexRec(): #Определение пола
+
+def SexRec():  # Определение пола
     if ik[0] == "1" or ik[0] == "3" or ik[0] == "5":
         Sex.configure(text="Sex:\n Man")
         return MOB()
@@ -75,32 +80,37 @@ def SexRec(): #Определение пола
         Sex.configure(text="Sex:\n Woman")
         return MOB()
 
-def MOB(): #Определение месяца рождения
+
+def MOB():  # Определение месяца рождения
     global BMonth
-    Month=["January", "February", "March", 
-        "April", "May", "June", 
-        "July", "August", "September", 
+    Month = ["January", "February", "March",
+        "April", "May", "June",
+        "July", "August", "September",
         "October", "November", "December"]
-    BMonthNum = int(ik[3:5])-1
+    BMonthNum = int(ik[3:5]) - 1
     if BMonthNum >= 12:
         Months.configure(text="Month:\n Invalid Month", text_color="Red")
     else:
-        BMonth = Month[int(ik[3:5])-1]
-        Months.configure(text="Month:\n "+BMonth)
+        BMonth = Month[int(ik[3:5]) - 1]
+        Months.configure(text="Month:\n " + BMonth)
     return DOB()
 
-def DOB(): # Определение дня рождения
-    Day.configure(text="Day:\n "+ik[5:7])
+
+def DOB():  # Определение дня рождения
+    Day.configure(text="Day:\n " + ik[5:7])
     FlDOB()
-    BBS() 
+    BBS()
+
 
 def FlDOB():
     FullDOB.configure(text="Full DOB:\n " + ik[5:7] + " " + BMonth + " " + yearG)
 
-def BBS(): #Определение кол-ва родившихся до
-    bik = int(ik[7:10])-1
-    BornB.configure(text=("Born before:\n "+str(bik)))
+
+def BBS():  # Определение кол-ва родившихся до
+    bik = int(ik[7:10]) - 1
+    BornB.configure(text=("Born before:\n " + str(bik)))
     Validation()
+
 
 def Validation():
     # Получить последнюю цифру из IK (используйте ik[-1])
@@ -126,7 +136,8 @@ def Validation():
         Valid.configure(text=("Valid: NO"), text_color="Red")
     WriteInfo()
 
-def WriteInfo(): #Запись информации в текстовый документ 
+
+def WriteInfo():  # Запись информации в текстовый документ
     a = Sex.cget("text")
     b = Year.cget("text")
     c = Months.cget("text")
@@ -141,7 +152,8 @@ def WriteInfo(): #Запись информации в текстовый док
     with open(os.path.join(folder_name, Nam + ".txt"), "w") as file:
         file.write(data)
 
-def WriteInfoWrong(): #Запись информации в текстовый документ в случае неправильного ИК
+
+def WriteInfoWrong():  # Запись информации в текстовый документ в случае неправильного ИК
     a = Sex.cget("text")
     b = Year.cget("text")
     c = Months.cget("text")
@@ -156,6 +168,7 @@ def WriteInfoWrong(): #Запись информации в текстовый �
     with open(os.path.join(folder_name, Nam + ".txt"), "w") as file:
         file.write(data)
 
+
 def Again():
     Length.destroy()
     Sex.destroy()
@@ -164,15 +177,14 @@ def Again():
     Day.destroy()
     BornB.destroy()
     Valid.destroy()
-    #app.destroy()
+    # app.destroy()
     Start()
 
+
 def GUI():
-    #pdb.set_trace()
     global app
     app = customtkinter.CTk()
-    CTkMessagebox(title="Внимание!",message="Для корректной работы программы её исполняемый файл должен быть в отдельной папке", icon="warning", option_1="ПОнял")
-    #time.sleep(2)
+    CTkMessagebox(title="Внимание!", message="Для корректной работы программы её исполняемый файл должен быть в отдельной папке", icon="warning", option_1="ПОнял")
     app.geometry("400x450")
     app.title("IK Checker")
     app.columnconfigure(40, weight=1)
@@ -186,6 +198,7 @@ def GUI():
     w = w - 200  # смещение от середины
     h = h - 200
     global IKEntry
+    cyc = 0
     LabelMain1 = customtkinter.CTkLabel(app, text="Insert IK")
     LabelMain1.pack(padx=40, pady=5)
     IKEntry = customtkinter.CTkEntry(app, width=100)
@@ -193,7 +206,18 @@ def GUI():
     IKEntry.configure(width=140)
     Gobtn = customtkinter.CTkButton(app, text="Check", command=btnprs)
     Gobtn.pack(padx=30, pady=10)
+    update_time()
     app.mainloop()
+
+
+def update_time():
+    TimeLabel = customtkinter.CTkLabel(app, text="")
+    TimeLabel.place(x=150, y=430)
+    todays_date = str(date.today())
+    current_time = time.strftime('%H:%M:%S')
+    TimeLabel.configure(text=str(todays_date) + " " + str(current_time))
+    app.after(1000, update_time)
+
 
 button_pressed = False
 
