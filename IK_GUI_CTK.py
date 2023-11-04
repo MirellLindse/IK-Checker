@@ -5,7 +5,7 @@ from CTkMessagebox import CTkMessagebox
 from datetime import datetime, date
 import time
 import os
-import pdb  # построчная отладка
+import pdb  # построчная отладка на всякий случай!
 
 
 def remove_topmost():
@@ -177,6 +177,7 @@ def Again():
     Day.destroy()
     BornB.destroy()
     Valid.destroy()
+    FullDOB.destroy()
     # app.destroy()
     Start()
 
@@ -198,7 +199,6 @@ def GUI():
     w = w - 200  # смещение от середины
     h = h - 200
     global IKEntry
-    cyc = 0
     LabelMain1 = customtkinter.CTkLabel(app, text="Insert IK")
     LabelMain1.pack(padx=40, pady=5)
     IKEntry = customtkinter.CTkEntry(app, width=100)
