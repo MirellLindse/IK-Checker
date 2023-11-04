@@ -1,4 +1,3 @@
-# Нужно установить библиотеки из импорта для нормальной работы кода вне .EXE
 import tkinter
 import customtkinter
 from CTkMessagebox import CTkMessagebox
@@ -54,7 +53,7 @@ def Main():  # Проверка ИК на правильность(Наличи�
             if ik == "Exit" or ik == "exit":
                 exit()
             elif len(ik) != 11:
-                print("Invalid code")
+                Length.configure(text="Length:\n Invalid", text_color="Red")
                 WriteInfoWrong()
             else:
                 Length.configure(text="Length:\n OK", text_color="Green")
@@ -73,12 +72,15 @@ def YOB():  # Определение года рождения
 
 
 def SexRec():  # Определение пола
-    if ik[0] == "1" or ik[0] == "3" or ik[0] == "5":
-        Sex.configure(text="Sex:\n Man")
-        return MOB()
+    if int(ik[0]) == 0:
+        Sex.configure(text="Sex:\n Invalid", text_color="red")
     else:
-        Sex.configure(text="Sex:\n Woman")
-        return MOB()
+        if (int(ik[0]) % 2) != 0:
+            Sex.configure(text="Sex:\n Man")
+            return MOB()
+        elif (int(ik[0]) % 2) == 0:
+            Sex.configure(text="Sex:\n Woman")
+            return MOB()
 
 
 def MOB():  # Определение месяца рождения
@@ -96,8 +98,36 @@ def MOB():  # Определение месяца рождения
     return DOB()
 
 
-def DOB():  # Определение дня рождения
-    Day.configure(text="Day:\n " + ik[5:7])
+def DOB():
+    if str(BMonth) == "January" or str(BMonth) == "March" or str(BMonth) == "May" or str(BMonth) == "July" or str(BMonth) == "August" or str(BMonth) == "October" or str(BMonth) == "December":
+        if int(ik[5:7]) > 31:
+            Day.configure(text="Day:\n Invalid", text_color="Red")
+            FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+        else:
+            Day.configure(text="Day:\n " + ik[5:7])
+    elif str(BMonth) == "April" or str(BMonth) == "June" or str(BMonth) == "September" or str(BMonth) == "November":
+        if int(ik[5:7]) > 30:
+            Day.configure(text="Day:\n Invalid", text_color="Red")
+            FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+        else:
+            Day.configure(text="Day:\n " + ik[5:7])
+    elif str(BMonth) == "February":
+        if int(ik[5:7]) > 29:
+            Day.configure(text="Day:\n Invalid", text_color="Red")
+            FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+        elif int(ik[5:7]) > 28:
+            yearG = int(ik[:4])
+            if (yearG % 400 == 0) or (yearG % 4 == 0 and yearG % 100 != 0):
+                Day.configure(text="Day:\n " + ik[5:7])
+            else:
+                Day.configure(text="Day:\n Invalid", text_color="Red")
+                FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+        else:
+            Day.configure(text="Day:\n " + ik[5:7])
+    else:
+        Day.configure(text="Day:\n Invalid", text_color="Red")
+        FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+
     FlDOB()
     BBS()
 
