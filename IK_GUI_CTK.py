@@ -7,10 +7,6 @@ import os
 import pdb  # построчная отладка на всякий случай!
 
 
-def remove_topmost():
-    app.attributes('-topmost', False)
-
-
 def btnprs():
     global button_pressed
     if button_pressed == False:
@@ -45,14 +41,11 @@ def Main():  # Проверка ИК на правильность(Наличи�
     global ik
     ik = IKEntry.get()
     if any(c.isalpha() for c in ik):
-        print("invalid")
         Length.configure(text="Length: Invalid", text_color="Red")
         WriteInfoWrong()
     else:
         if ik != "":
-            if ik == "Exit" or ik == "exit":
-                exit()
-            elif len(ik) != 11:
+            if len(ik) != 11:
                 Length.configure(text="Length:\n Invalid", text_color="Red")
                 WriteInfoWrong()
             else:
@@ -74,6 +67,7 @@ def YOB():  # Определение года рождения
 def SexRec():  # Определение пола
     if int(ik[0]) == 0:
         Sex.configure(text="Sex:\n Invalid", text_color="red")
+        WriteInfoWrong()
     else:
         if (int(ik[0]) % 2) != 0:
             Sex.configure(text="Sex:\n Man")
@@ -91,7 +85,8 @@ def MOB():  # Определение месяца рождения
         "October", "November", "December"]
     BMonthNum = int(ik[3:5]) - 1
     if BMonthNum >= 12:
-        Months.configure(text="Month:\n Invalid Month", text_color="Red")
+        Months.configure(text="Month:\n Invalid", text_color="Red")
+        WriteInfoWrong()
     else:
         BMonth = Month[int(ik[3:5]) - 1]
         Months.configure(text="Month:\n " + BMonth)
@@ -103,18 +98,24 @@ def DOB():
         if int(ik[5:7]) > 31:
             Day.configure(text="Day:\n Invalid", text_color="Red")
             FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+            Months.configure(text="Month:\n Invalid Month", text_color="Red")
+            WriteInfoWrong()
         else:
             Day.configure(text="Day:\n " + ik[5:7])
     elif str(BMonth) == "April" or str(BMonth) == "June" or str(BMonth) == "September" or str(BMonth) == "November":
         if int(ik[5:7]) > 30:
             Day.configure(text="Day:\n Invalid", text_color="Red")
             FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+            Months.configure(text="Month:\n Invalid Month", text_color="Red")
+            WriteInfoWrong()
         else:
             Day.configure(text="Day:\n " + ik[5:7])
     elif str(BMonth) == "February":
         if int(ik[5:7]) > 29:
             Day.configure(text="Day:\n Invalid", text_color="Red")
             FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+            Months.configure(text="Month:\n Invalid", text_color="Red")
+            WriteInfoWrong()
         elif int(ik[5:7]) > 28:
             yearG = int(ik[:4])
             if (yearG % 400 == 0) or (yearG % 4 == 0 and yearG % 100 != 0):
@@ -122,12 +123,15 @@ def DOB():
             else:
                 Day.configure(text="Day:\n Invalid", text_color="Red")
                 FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+                Months.configure(text="Month:\n Invalid", text_color="Red")
+                WriteInfoWrong()
         else:
             Day.configure(text="Day:\n " + ik[5:7])
     else:
         Day.configure(text="Day:\n Invalid", text_color="Red")
         FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
-
+        Months.configure(text="Month:\n Invalid Month", text_color="Red")
+        WriteInfoWrong()
     FlDOB()
     BBS()
 
@@ -220,8 +224,6 @@ def GUI():
     app.title("IK Checker")
     app.columnconfigure(40, weight=1)
     app.rowconfigure(40, weight=1)
-    app.attributes('-topmost', True)
-    app.after(5, remove_topmost)
     w = app.winfo_screenwidth()
     h = app.winfo_screenheight()
     w = w // 2  # середина экрана
