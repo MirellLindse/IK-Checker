@@ -6,6 +6,8 @@ import time
 import os
 import pdb  # построчная отладка на всякий случай!
 
+def remove_topmost():
+    app.attributes('-topmost', False)
 
 def btnprs():
     global button_pressed
@@ -14,7 +16,6 @@ def btnprs():
         Start()
     elif button_pressed == True:
         Again()
-
 
 def Start():  # Основная функция, создаёт GUI
     global Length, Sex, Year, Months, Day, BornB, Valid, FullDOB
@@ -36,37 +37,37 @@ def Start():  # Основная функция, создаёт GUI
     Valid.pack(padx=40, pady=4)
     Main()
 
-
 def Main():  # Проверка ИК на правильность(Наличие букв, команды Exit, длина(Равна ли 11))
     global ik
     ik = IKEntry.get()
     if any(c.isalpha() for c in ik):
-        Length.configure(text="Length: Invalid", text_color="Red")
+        WrongInf(Len=1)
         WriteInfoWrong()
     else:
         if ik != "":
             if len(ik) != 11:
-                Length.configure(text="Length:\n Invalid", text_color="Red")
+                WrongInf(Len=1)
                 WriteInfoWrong()
             else:
                 Length.configure(text="Length:\n OK", text_color="Green")
                 YOB()
 
-
 def YOB():  # Определение года рождения
     global yearG
     if ik[1:3] >= YearNow[2:4]:
         yearG = "19" + ik[1:3]
-        Year.configure(text="Year:\n" + yearG)
+        if int(yearG) - int(YearNow[2:4]) >= 100:
+            WrongInf(Y=1)
+        else:
+            Year.configure(text="Year:\n" + yearG)
     elif ik[1:3] <= YearNow[2:4]:
         yearG = "20" + ik[1:3]
         Year.configure(text="Year:\n" + yearG)
     SexRec()
 
-
 def SexRec():  # Определение пола
     if int(ik[0]) == 0:
-        Sex.configure(text="Sex:\n Invalid", text_color="red")
+        WrongInf(Se=1)
         WriteInfoWrong()
     else:
         if (int(ik[0]) % 2) != 0:
@@ -76,7 +77,6 @@ def SexRec():  # Определение пола
             Sex.configure(text="Sex:\n Woman")
             return MOB()
 
-
 def MOB():  # Определение месяца рождения
     global BMonth
     Month = ["January", "February", "March",
@@ -85,66 +85,68 @@ def MOB():  # Определение месяца рождения
         "October", "November", "December"]
     BMonthNum = int(ik[3:5]) - 1
     if BMonthNum >= 12:
-        Months.configure(text="Month:\n Invalid", text_color="Red")
+        WrongInf(Mo=1)
         WriteInfoWrong()
     else:
         BMonth = Month[int(ik[3:5]) - 1]
         Months.configure(text="Month:\n " + BMonth)
     return DOB()
 
+def WrongInf(D=None, Y=None, Mo=None, DOBWrong=None, Len=None, Se=None, Val=None):
+    if D is not None:
+        Day.configure(text="Day:\n Invalid", text_color="Red")
+    if Y is not None:
+        Year.configure(text="Year:\n Invalid", text_color="Red")
+    if Mo is not None:
+        Months.configure(text="Month:\n Invalid Month", text_color="Red")
+    if DOBWrong is not None:
+        FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
+    if Len is not None:
+        Length.configure(text="Length:\n Invalid", text_color="Red")
+    if Se is not None:
+        Sex.configure(text="Sex:\n Invalid", text_color="Red")
+    if Val is not None:
+        Valid.configure(text="Valid:\n Invalid", text_color="Red")
 
 def DOB():
     if str(BMonth) == "January" or str(BMonth) == "March" or str(BMonth) == "May" or str(BMonth) == "July" or str(BMonth) == "August" or str(BMonth) == "October" or str(BMonth) == "December":
         if int(ik[5:7]) > 31:
-            Day.configure(text="Day:\n Invalid", text_color="Red")
-            FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
-            Months.configure(text="Month:\n Invalid Month", text_color="Red")
+            WrongInf(D=1, DOBWrong=1, Mo=1)
             WriteInfoWrong()
         else:
             Day.configure(text="Day:\n " + ik[5:7])
     elif str(BMonth) == "April" or str(BMonth) == "June" or str(BMonth) == "September" or str(BMonth) == "November":
         if int(ik[5:7]) > 30:
-            Day.configure(text="Day:\n Invalid", text_color="Red")
-            FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
-            Months.configure(text="Month:\n Invalid Month", text_color="Red")
+            WrongInf(D=1, DOBWrong=1, Mo=1)
             WriteInfoWrong()
         else:
             Day.configure(text="Day:\n " + ik[5:7])
     elif str(BMonth) == "February":
         if int(ik[5:7]) > 29:
-            Day.configure(text="Day:\n Invalid", text_color="Red")
-            FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
-            Months.configure(text="Month:\n Invalid", text_color="Red")
+            WrongInf(D=1, DOBWrong=1, Mo=1)
             WriteInfoWrong()
         elif int(ik[5:7]) > 28:
             yearG = int(ik[:4])
             if (yearG % 400 == 0) or (yearG % 4 == 0 and yearG % 100 != 0):
                 Day.configure(text="Day:\n " + ik[5:7])
             else:
-                Day.configure(text="Day:\n Invalid", text_color="Red")
-                FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
-                Months.configure(text="Month:\n Invalid", text_color="Red")
+                WrongInf(D=1, DOBWrong=1, Mo=1)
                 WriteInfoWrong()
         else:
             Day.configure(text="Day:\n " + ik[5:7])
     else:
-        Day.configure(text="Day:\n Invalid", text_color="Red")
-        FullDOB.configure(text="DOB:\n Invalid", text_color="Red")
-        Months.configure(text="Month:\n Invalid Month", text_color="Red")
+        WrongInf(D=1, DOBWrong=1, Mo=1)
         WriteInfoWrong()
     FlDOB()
     BBS()
 
-
 def FlDOB():
     FullDOB.configure(text="Full DOB:\n " + ik[5:7] + " " + BMonth + " " + yearG)
-
 
 def BBS():  # Определение кол-ва родившихся до
     bik = int(ik[7:10]) - 1
     BornB.configure(text=("Born before:\n " + str(bik)))
     Validation()
-
 
 def Validation():
     # Получить последнюю цифру из IK (используйте ik[-1])
@@ -170,7 +172,6 @@ def Validation():
         Valid.configure(text=("Valid: NO"), text_color="Red")
     WriteInfo()
 
-
 def WriteInfo():  # Запись информации в текстовый документ
     a = Sex.cget("text")
     b = Year.cget("text")
@@ -185,7 +186,6 @@ def WriteInfo():  # Запись информации в текстовый до
         os.mkdir(folder_name)
     with open(os.path.join(folder_name, Nam + ".txt"), "w") as file:
         file.write(data)
-
 
 def WriteInfoWrong():  # Запись информации в текстовый документ в случае неправильного ИК
     a = Sex.cget("text")
@@ -202,7 +202,6 @@ def WriteInfoWrong():  # Запись информации в текстовый
     with open(os.path.join(folder_name, Nam + ".txt"), "w") as file:
         file.write(data)
 
-
 def Again():
     Length.destroy()
     Sex.destroy()
@@ -215,13 +214,14 @@ def Again():
     # app.destroy()
     Start()
 
-
 def GUI():
     global app
     app = customtkinter.CTk()
     CTkMessagebox(title="Внимание!", message="Для корректной работы программы её исполняемый файл должен быть в отдельной папке", icon="warning", option_1="ПОнял")
     app.geometry("400x450")
     app.title("IK Checker")
+    app.attributes('-topmost', True)
+    app.after(5, remove_topmost)
     app.columnconfigure(40, weight=1)
     app.rowconfigure(40, weight=1)
     w = app.winfo_screenwidth()
@@ -241,7 +241,6 @@ def GUI():
     update_time()
     app.mainloop()
 
-
 def update_time():
     TimeLabel = customtkinter.CTkLabel(app, text="")
     TimeLabel.place(x=150, y=430)
@@ -249,7 +248,6 @@ def update_time():
     current_time = time.strftime('%H:%M:%S')
     TimeLabel.configure(text=str(todays_date) + " " + str(current_time))
     app.after(1000, update_time)
-
 
 button_pressed = False
 
